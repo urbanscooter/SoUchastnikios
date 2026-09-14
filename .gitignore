@@ -1,0 +1,11 @@
+.build/
+.crosscode/
+*.ipa
+*.dSYM
+.DS_Store
+xcuserdata/
+*.xcuserstate
+.swiftpm/
+Package.resolved
+build/
+*.xcodeproj

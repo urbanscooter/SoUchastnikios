@@ -1,0 +1,48 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build archive (unsigned)
+        run: |
+          xcodebuild archive \
+            -project SoUchastnik.xcodeproj \
+            -scheme SoUchastnik \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath $PWD/build/SoUchastnik.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_ENTITLEMENTS=""
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p build/Payload
+          cp -R build/SoUchastnik.xcarchive/Products/Applications/SoUchastnik.app build/Payload/
+          cd build
+          zip -r SoUchastnik-unsigned.ipa Payload
+          ls -la
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: SoUchastnik-unsigned-ipa
+          path: build/SoUchastnik-unsigned.ipa
+          retention-days: 30
