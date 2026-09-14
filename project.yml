@@ -48,7 +48,7 @@ targets:
             IsASCIICapable: true
             PrefersRightToLeft: false
             PrimaryLanguage: ru
-            RequestsOpenAccess: false
+            RequestsOpenAccess: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.urbanscooter.souchastnik.keyboard
